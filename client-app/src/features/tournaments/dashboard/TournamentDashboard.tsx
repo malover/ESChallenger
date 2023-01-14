@@ -1,52 +1,32 @@
-import React from "react";
+import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
 import { Grid, GridColumn } from "semantic-ui-react";
-import { Tournament } from "../../../app/models/tournament";
-import TournamentDetails from "../details/TournamentDetails";
-import TournamentForm from "../form/TournamentForm";
+import { useStore } from "../../../app/api/stores/store";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
+import TournamentFilters from "./TournamentFilters";
 import TournamentList from "./TournamentList";
 
-interface Props
+export default observer(function TournamentDashboard()
 {
-    tournaments: Tournament[];
-    selectedTournament: Tournament | undefined;
-    selectTournament: (id: string) => void;
-    handleCancelSelectTournament: () => void;
-    editMode: boolean;
-    openForm: (id: string) => void;
-    closeForm: () => void;
-    createOrEdit: (tournament: Tournament) => void;
-    deleteTournament: (id: string) => void;
-    submitting: boolean;
-}
 
+    const { tournamentStore } = useStore();
+    const { loadTournaments, tournamentRegistry } = tournamentStore;
 
-export default function TournamentDashboard({ tournaments, selectedTournament, selectTournament, handleCancelSelectTournament,
-    editMode, openForm, closeForm, createOrEdit, deleteTournament, submitting }: Props)
-{
+    useEffect(() =>
+    {
+        if (tournamentRegistry.size <= 1) loadTournaments();
+    }, [loadTournaments, tournamentRegistry.size])
+
+    if (tournamentStore.loadingInitial) return <LoadingComponent content='Loading app' />
+
     return (
         <Grid>
             <Grid.Column width='10'>
-                <TournamentList
-                    tournaments={tournaments}
-                    selectTournament={selectTournament}
-                    deleteTournament={deleteTournament}
-                    cancelSelectTournament={handleCancelSelectTournament}
-                    submitting={submitting}
-                />
+                <TournamentList />
             </Grid.Column>
             <GridColumn width='6'>
-                {selectedTournament && !editMode &&
-                    <TournamentDetails tournament={selectedTournament}
-                    handleCancelSelectTournament={handleCancelSelectTournament}
-                    openForm={openForm}
-                    />}
-                {editMode &&
-                    <TournamentForm closeForm={closeForm}
-                        tournament={selectedTournament}
-                        createOrEdit={createOrEdit}
-                        submitting={submitting}
-                    />}
+                <TournamentFilters />
             </GridColumn>
         </Grid>
     )
-}
+})

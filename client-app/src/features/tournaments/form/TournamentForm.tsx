@@ -1,35 +1,51 @@
-import React, { ChangeEvent, useState } from "react";
+import { observer } from "mobx-react-lite";
+import React, { ChangeEvent, useState, useEffect } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button, Form, Segment } from "semantic-ui-react";
+import { useStore } from "../../../app/api/stores/store";
+import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { Tournament } from "../../../app/models/tournament";
+import { v4 as uuid } from 'uuid';
 
-interface Props
+export default observer(function TournamentForm()
 {
-    tournament: Tournament | undefined;
-    closeForm: () => void;
-    createOrEdit: (tournament: Tournament) => void;
-    submitting: boolean;
-}
+    const { tournamentStore } = useStore();
+    const { selectedTournament, createTournament, updateTournament,
+        loading, loadTournament, loadingInitial } = tournamentStore;
 
-export default function TournamentForm({ tournament: selectedTournament, closeForm, createOrEdit, submitting }: Props)
-{
+    const { id } = useParams();
 
-    const initialState = selectedTournament ?? {
-        id: '',
-        title: '',
-        category: '',
-        description: '',
-        date: '',
-        country: '',
-        city: '',
-        venue: '',
-        prizePool: 0
-    }
+    const navigate = useNavigate();
 
-    const [tournament, setTournament] = useState(initialState);
+    const [tournament, setTournament] = useState<Tournament>(
+        {
+            id: '',
+            title: '',
+            category: '',
+            description: '',
+            date: '',
+            country: '',
+            city: '',
+            venue: '',
+            prizePool: 0
+        });
+    
+    useEffect(() =>
+    {
+        if (id) loadTournament(id).then(tournament => setTournament(tournament!))
+    }, [id, loadTournament]);
 
     function handleSubmit()
     {
-        createOrEdit(tournament);
+        if (!tournament.id)
+        {
+            tournament.id = uuid();
+            createTournament(tournament).then(() => navigate(`/tournaments/${tournament.id}`));
+        }
+        else
+        {
+            updateTournament(tournament).then(() => navigate(`/tournaments/${tournament.id}`));
+        }
     }
 
     function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
@@ -37,6 +53,8 @@ export default function TournamentForm({ tournament: selectedTournament, closeFo
         const { name, value } = event.target;
         setTournament({ ...tournament, [name]: value })
     }
+
+    if(loadingInitial) return <LoadingComponent content='Loading tournament...'/>
 
     return (
         <Segment clearing>
@@ -49,9 +67,9 @@ export default function TournamentForm({ tournament: selectedTournament, closeFo
                 <Form.Input placeholder='City' value={tournament.city} name='city' onChange={handleInputChange} />
                 <Form.Input placeholder='Venue' value={tournament.venue} name='venue' onChange={handleInputChange} />
                 <Form.Input placeholder='Prize pool' value={tournament.prizePool} name='prizePool' onChange={handleInputChange} />
-                <Button loading={submitting} floated="right" positive type='submit' content='Submit' />
-                <Button onClick={closeForm} floated="right" type='button' content='Cancel' />
+                <Button loading={loading} floated="right" positive type='submit' content='Submit' />
+                <Button as={Link} to='/tournaments' floated="right" type='button' content='Cancel' />
             </Form>
         </Segment>
     )
-}
+})
