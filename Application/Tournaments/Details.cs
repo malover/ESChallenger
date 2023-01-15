@@ -1,3 +1,4 @@
+using Application.Core;
 using Domain;
 using MediatR;
 using Persistence;
@@ -6,12 +7,12 @@ namespace Application.Tournaments
 {
     public class Details
     {
-        public class Query : IRequest<Tournament>
+        public class Query : IRequest<Result<Tournament>>
         {
             public Guid Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Tournament>
+        public class Handler : IRequestHandler<Query, Result<Tournament>>
         {
             private readonly DataContext _context;
             public Handler(DataContext context)
@@ -19,9 +20,11 @@ namespace Application.Tournaments
                 _context = context;
 
             }
-            public async Task<Tournament> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Result<Tournament>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Tournaments.FindAsync(request.Id);
+                var tournament = await _context.Tournaments.FindAsync(request.Id);
+
+                return Result<Tournament>.Success(tournament);
             }
         }
     }

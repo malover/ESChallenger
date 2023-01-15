@@ -1,13 +1,16 @@
 import TournamentStore from "./tournamentStore";
 import { createContext, useContext } from 'react';
+import CommonStore from "./CommandStore";
 
 interface Store
 {
-    tournamentStore: TournamentStore
+    tournamentStore: TournamentStore;
+    commonStore: CommonStore;
 }
 
 export const store: Store = {
-    tournamentStore: new TournamentStore()
+    tournamentStore: new TournamentStore(),
+    commonStore: new CommonStore()
 }
 
 export const StoreContext = createContext(store);

@@ -12,6 +12,7 @@ export default function NavBar()
                 </Menu.Item>
 
                 <Menu.Item as={NavLink} to='/tournaments' name='ESChallenger' />
+                <Menu.Item as={NavLink} to='/errors' name='Errors' />
 
                 <Menu.Item>
                     <Button as={NavLink} to='/createTournament' positive content='Create tournament'/>
