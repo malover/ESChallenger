@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import { Button, Icon, Item, Segment, SegmentGroup } from "semantic-ui-react";
 import { Tournament } from "../../../app/models/tournament";
@@ -26,7 +27,7 @@ export default function TournamentListItem({ tournament }: Props)
             </Segment>
             <Segment>
                 <span>
-                    <Icon name='clock' /> {tournament.date}
+                    <Icon name='clock' /> {format(tournament.date!, 'dd MMMM yyyy h:mm aa')}
                     <Icon name='marker' /> {tournament.venue}
                 </span>
             </Segment>

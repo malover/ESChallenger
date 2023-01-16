@@ -1,7 +1,9 @@
+import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import React from 'react'
-import {Button, Header, Item, Segment, Image} from 'semantic-ui-react'
-import {Tournament} from "../../../app/models/tournament";
+import { Link } from 'react-router-dom';
+import { Button, Header, Item, Segment, Image } from 'semantic-ui-react'
+import { Tournament } from "../../../app/models/tournament";
 
 const tournamentImageStyle = {
     filter: 'brightness(30%)'
@@ -16,15 +18,17 @@ const tournamentImageTextStyle = {
     color: 'white'
 };
 
-interface Props {
+interface Props
+{
     tournament: Tournament
 }
 
-export default observer (function TournamentDetailedHeader({tournament}: Props) {
+export default observer(function TournamentDetailedHeader({ tournament }: Props)
+{
     return (
         <Segment.Group>
-            <Segment basic attached='top' style={{padding: '0'}}>
-                <Image src={`/assets/categories/${tournament.category}.jpg`} fluid style={tournamentImageStyle}/>
+            <Segment basic attached='top' style={{ padding: '0' }}>
+                <Image src={`/assets/categories/${tournament.category}.jpg`} fluid style={tournamentImageStyle} />
                 <Segment style={tournamentImageTextStyle} basic>
                     <Item.Group>
                         <Item>
@@ -32,9 +36,9 @@ export default observer (function TournamentDetailedHeader({tournament}: Props) 
                                 <Header
                                     size='huge'
                                     content={tournament.title}
-                                    style={{color: 'white'}}
+                                    style={{ color: 'white' }}
                                 />
-                                <p>{tournament.date}</p>
+                                <p>{format(tournament.date!, 'dd MMM yyyy')}</p>
                                 <p>
                                     Hosted by <strong>Bob</strong>
                                 </p>
@@ -46,7 +50,7 @@ export default observer (function TournamentDetailedHeader({tournament}: Props) 
             <Segment clearing attached='bottom'>
                 <Button color='teal'>Join Activity</Button>
                 <Button>Cancel attendance</Button>
-                <Button color='orange' floated='right'>
+                <Button color='orange' floated='right' as={Link} to={`/manage/${tournament.id}`}>
                     Manage Event
                 </Button>
             </Segment>

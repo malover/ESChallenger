@@ -1,19 +1,22 @@
+import { format } from 'date-fns';
 import { observer } from 'mobx-react-lite';
 import React from 'react'
-import {Segment, Grid, Icon} from 'semantic-ui-react'
-import {Tournament} from "../../../app/models/tournament";
+import { Segment, Grid, Icon } from 'semantic-ui-react'
+import { Tournament } from "../../../app/models/tournament";
 
-interface Props {
+interface Props
+{
     tournament: Tournament
 }
 
-export default observer(function ActivityDetailedInfo({tournament}: Props) {
+export default observer(function ActivityDetailedInfo({ tournament }: Props)
+{
     return (
         <Segment.Group>
             <Segment attached='top'>
                 <Grid>
                     <Grid.Column width={1}>
-                        <Icon size='large' color='teal' name='info'/>
+                        <Icon size='large' color='teal' name='info' />
                     </Grid.Column>
                     <Grid.Column width={15}>
                         <p>{tournament.description}</p>
@@ -23,19 +26,19 @@ export default observer(function ActivityDetailedInfo({tournament}: Props) {
             <Segment attached>
                 <Grid verticalAlign='middle'>
                     <Grid.Column width={1}>
-                        <Icon name='calendar' size='large' color='teal'/>
+                        <Icon name='calendar' size='large' color='teal' />
                     </Grid.Column>
                     <Grid.Column width={15}>
-            <span>
-              {tournament.date}
-            </span>
+                        <span>
+                            {format(tournament.date!, 'dd MMMM yyyy h:mm aa')}
+                        </span>
                     </Grid.Column>
                 </Grid>
             </Segment>
             <Segment attached>
                 <Grid verticalAlign='middle'>
                     <Grid.Column width={1}>
-                        <Icon name='marker' size='large' color='teal'/>
+                        <Icon name='marker' size='large' color='teal' />
                     </Grid.Column>
                     <Grid.Column width={11}>
                         <span>{tournament.venue}, {tournament.city}, {tournament.country}</span>
@@ -45,7 +48,7 @@ export default observer(function ActivityDetailedInfo({tournament}: Props) {
             <Segment attached>
                 <Grid verticalAlign='middle'>
                     <Grid.Column width={1}>
-                        <Icon name='money' size='large' color='teal'/>
+                        <Icon name='money' size='large' color='teal' />
                     </Grid.Column>
                     <Grid.Column width={11}>
                         <span>Prize pool: {tournament.prizePool}$</span>

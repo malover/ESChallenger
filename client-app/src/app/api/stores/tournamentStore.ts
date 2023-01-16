@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { Tournament } from "../../models/tournament";
 import agent from "../Agent";
 import { v4 as uuid } from 'uuid';
+import { format } from "date-fns";
 
 export default class TournamentStore
 {
@@ -19,7 +20,7 @@ export default class TournamentStore
     get tournamentsByDate()
     {
         return Array.from(this.tournamentRegistry.values()).sort((a, b) =>
-            Date.parse(a.date) - Date.parse(b.date));
+            a.date!.getTime() - b.date!.getTime());
     }
 
     get groupedTournaments()
@@ -27,10 +28,10 @@ export default class TournamentStore
         return Object.entries(
             this.tournamentsByDate.reduce((tournaments, tournament) =>
             {
-                const date = tournament.date;
+                const date = format(tournament.date!, 'dd MMM yyyy');
                 tournaments[date] = tournaments[date] ? [...tournaments[date], tournament] : [tournament];
                 return tournaments;
-            }, {} as {[key: string] : Tournament[]})
+            }, {} as { [key: string]: Tournament[] })
         )
     }
 
@@ -163,7 +164,7 @@ export default class TournamentStore
 
     private setTournament = (tournament: Tournament) =>
     {
-        tournament.date = tournament.date.split('T')[0];
+        tournament.date = new Date(tournament.date!);
         this.tournamentRegistry.set(tournament.id, tournament);
     }
 }
