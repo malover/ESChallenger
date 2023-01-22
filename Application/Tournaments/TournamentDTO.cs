@@ -1,6 +1,8 @@
-namespace Domain
+using Application.Profiles;
+
+namespace Application.Tournaments
 {
-    public class Tournament
+    public class TournamentDTO
     {
         public Guid Id { get; set; }
         public string Title { get; set; }
@@ -11,7 +13,8 @@ namespace Domain
         public string City { get; set; }
         public string Venue { get; set; }
         public decimal PrizePool { get; set; }
+        public string HostUsername { get; set; }
         public bool IsCancelled { get; set; }
-        public ICollection<TournamentParticipator> Participators { get; set; } = new List<TournamentParticipator>();
+        public ICollection<Profile> Participators { get; set; }
     }
 }

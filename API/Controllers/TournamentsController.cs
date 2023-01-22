@@ -26,6 +26,7 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Create.Command { Tournament = tournament }));
         }
 
+        [Authorize(Policy = "IsTournamentHost")]
         [HttpPut("{id}")]
         public async Task<IActionResult> EditTournament(Guid id, Tournament tournament)
         {
@@ -33,10 +34,17 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new Edit.Command { Tournament = tournament }));
         }
 
+        [Authorize(Policy = "IsTournamentHost")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTournament(Guid id)
         {
             return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+        }
+
+        [HttpPost("{id}/participate")]
+        public async Task<IActionResult> Participate(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateParticipators.Command { Id = id }));
         }
     }
 }

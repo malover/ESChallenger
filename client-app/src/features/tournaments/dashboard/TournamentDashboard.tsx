@@ -17,7 +17,7 @@ export default observer(function TournamentDashboard()
         if (tournamentRegistry.size <= 1) loadTournaments();
     }, [loadTournaments, tournamentRegistry.size])
 
-    if (tournamentStore.loadingInitial) return <LoadingComponent content='Loading app' />
+    if (tournamentStore.loadingInitial) return <LoadingComponent content='Loading tournaments' />
 
     return (
         <Grid>
