@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Domain
 {
     public class Tournament
@@ -16,5 +11,7 @@ namespace Domain
         public string City { get; set; }
         public string Venue { get; set; }
         public decimal PrizePool { get; set; }
+        public bool IsCancelled { get; set; }
+        public ICollection<TournamentParticipator> Participators { get; set; } = new List<TournamentParticipator>();
     }
 }

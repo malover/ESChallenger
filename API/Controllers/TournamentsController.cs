@@ -1,28 +1,50 @@
+using Application.Tournaments;
 using Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace API.Controllers
 {
     public class TournamentsController : BaseApiController
     {
-        private readonly DataContext _context;
-        public TournamentsController(DataContext context)
-        {
-            _context = context;
-        }
-
         [HttpGet]
-        public async Task<ActionResult<List<Tournament>>> GetTournaments()
+        public async Task<IActionResult> GetTournaments()
         {
-            return await _context.Tournaments.ToListAsync();
+            var response = await Mediator.Send(new List.Query());
+            return HandleResult(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Tournament>> GetTournamentById(Guid id)
+        public async Task<IActionResult> GetTournamentById(Guid id)
         {
-            return await _context.Tournaments.FindAsync(id);
+            return HandleResult(await Mediator.Send(new Details.Query { Id = id }));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTournament(Tournament tournament)
+        {
+            return HandleResult(await Mediator.Send(new Create.Command { Tournament = tournament }));
+        }
+
+        [Authorize(Policy = "IsTournamentHost")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditTournament(Guid id, Tournament tournament)
+        {
+            tournament.Id = id;
+            return HandleResult(await Mediator.Send(new Edit.Command { Tournament = tournament }));
+        }
+
+        [Authorize(Policy = "IsTournamentHost")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTournament(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+        }
+
+        [HttpPost("{id}/participate")]
+        public async Task<IActionResult> Participate(Guid id)
+        {
+            return HandleResult(await Mediator.Send(new UpdateParticipators.Command { Id = id }));
         }
     }
 }
