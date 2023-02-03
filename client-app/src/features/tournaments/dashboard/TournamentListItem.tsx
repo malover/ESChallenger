@@ -1,7 +1,8 @@
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import { Button, Icon, Item, Segment, SegmentGroup } from "semantic-ui-react";
+import { Button, Icon, Item, Label, Segment, SegmentGroup } from "semantic-ui-react";
 import { Tournament } from "../../../app/models/tournament";
+import TournamentListItemParticipator from "./TournamentListItemParticipator";
 
 interface Props
 {
@@ -13,14 +14,29 @@ export default function TournamentListItem({ tournament }: Props)
     return (
         <SegmentGroup>
             <Segment>
+                {tournament.isCancelled && <Label attached="top" color="red" content="Cancelled" style={{ textAlign: "center" }} />}
                 <Item.Group>
                     <Item>
-                        <Item.Image size="tiny" circular src='/assets/user.png ' />
+                        <Item.Image style={{marginBottom: 5}} size="tiny" circular src='/assets/user.png ' />
                         <Item.Content>
                             <Item.Header as={Link} to={`/tournaments/${tournament.id}`}>
                                 {tournament.title}
                             </Item.Header>
-                            <Item.Description>Hosted by Bob</Item.Description>
+                            <Item.Description>Hosted by {tournament.host?.displayName}</Item.Description>
+                            {tournament.isHost && (
+                                <Item.Description>
+                                    <Label basic color="orange">
+                                        You are hosting this tournament
+                                    </Label>
+                                </Item.Description>
+                            )}
+                            {tournament.isGoing && !tournament.isHost && (
+                                <Item.Description>
+                                    <Label basic color="green">
+                                        You are going to this tournament
+                                    </Label>
+                                </Item.Description>
+                            )}
                         </Item.Content>
                     </Item>
                 </Item.Group>
@@ -32,7 +48,7 @@ export default function TournamentListItem({ tournament }: Props)
                 </span>
             </Segment>
             <Segment secondary>
-                Teams go here
+                <TournamentListItemParticipator participators={tournament.participators!} />
             </Segment>
             <Segment clearing>
                 <span>

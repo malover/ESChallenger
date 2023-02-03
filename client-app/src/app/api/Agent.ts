@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from "react-toastify";
-import { Tournament } from "../models/tournament";
+import { Tournament, TournamentFormValues } from "../models/tournament";
 import { User, UserFormValues } from "../models/user";
 import { router } from "../router/Routes";
 import { store } from "./stores/store";
@@ -82,9 +82,10 @@ const request = {
 const Tournaments = {
     list: () => request.get<Tournament[]>('/tournaments'),
     details: (id: string) => request.get<Tournament>(`/tournaments/${id}`),
-    create: (tournament: Tournament) => axios.post<void>('/tournaments', tournament),
-    update: (tournament: Tournament) => axios.put<void>(`/tournaments/${tournament.id}`, tournament),
-    delete: (id: string) => axios.delete<void>(`/tournaments/${id}`)
+    create: (tournament: TournamentFormValues) => request.post<void>('/tournaments', tournament),
+    update: (tournament: TournamentFormValues) => request.put<void>(`/tournaments/${tournament.id}`, tournament),
+    delete: (id: string) => request.del<void>(`/tournaments/${id}`),
+    participate:(id:string) => request.post<void>(`/tournaments/${id}/participate`, {})
 }
 
 const Account = {

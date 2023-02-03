@@ -4,7 +4,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { Button, Header, Segment } from "semantic-ui-react";
 import { useStore } from "../../../app/api/stores/store";
 import LoadingComponent from "../../../app/layout/LoadingComponent";
-import { Tournament } from "../../../app/models/tournament";
+import { TournamentFormValues } from "../../../app/models/tournament";
 import { Formik, Form } from "formik";
 import * as Yup from 'yup';
 import MyTextInput from "../../../app/common/form/MyTextInput";
@@ -17,25 +17,14 @@ import { v4 as uuid } from 'uuid';
 export default observer(function TournamentForm()
 {
     const { tournamentStore } = useStore();
-    const { selectedTournament, createTournament, updateTournament,
-        loading, loadTournament, loadingInitial } = tournamentStore;
+    const { createTournament, updateTournament,
+        loadTournament, loadingInitial } = tournamentStore;
 
     const { id } = useParams();
 
     const navigate = useNavigate();
 
-    const [tournament, setTournament] = useState<Tournament>(
-        {
-            id: '',
-            title: '',
-            category: '',
-            description: '',
-            date: null,
-            country: '',
-            city: '',
-            venue: '',
-            prizePool: null
-        });
+    const [tournament, setTournament] = useState<TournamentFormValues>(new TournamentFormValues())
 
     const validationSchema = Yup.object({
         title: Yup.string().required('The tournament title is required'),
@@ -51,10 +40,10 @@ export default observer(function TournamentForm()
 
     useEffect(() =>
     {
-        if (id) loadTournament(id).then(tournament => setTournament(tournament!))
+        if (id) loadTournament(id).then(tournament => setTournament(new TournamentFormValues(tournament)))
     }, [id, loadTournament]);
 
-    function handleFormSubmit(tournament: Tournament)
+    function handleFormSubmit(tournament: TournamentFormValues)
     {
         if (!tournament.id)
         {
@@ -66,12 +55,6 @@ export default observer(function TournamentForm()
             updateTournament(tournament).then(() => navigate(`/tournaments/${tournament.id}`));
         }
     }
-
-    // function handleChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)
-    // {
-    //     const { name, value } = event.target;
-    //     setTournament({ ...tournament, [name]: value })
-    // }
 
     if (loadingInitial) return <LoadingComponent content='Loading tournament...' />
 
@@ -103,7 +86,7 @@ export default observer(function TournamentForm()
                         <MyTextInput placeholder='$$$' name='prizePool' />
                         <Button
                             disabled={isSubmitting || !dirty || !isValid}
-                            loading={loading} floated="right"
+                            loading={isSubmitting} floated="right"
                             positive
                             type='submit'
                             content='Submit' />

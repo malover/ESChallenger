@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Infrastructure.Security
@@ -27,7 +28,9 @@ namespace Infrastructure.Security
 
             var tournamentId = Guid.Parse(_httpContextAccessor.HttpContext?.Request.RouteValues.SingleOrDefault(x => x.Key == "id").Value?.ToString());
 
-            var participator = _dbContext.TournamentParticipators.FindAsync(userId, tournamentId).Result;
+            var participator = _dbContext.TournamentParticipators
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.AppUserId == userId && x.TournamentId == tournamentId).Result;
 
             if (participator == null) return Task.CompletedTask;
 

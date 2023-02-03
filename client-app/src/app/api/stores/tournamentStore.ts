@@ -1,8 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { Tournament } from "../../models/tournament";
+import { Tournament, TournamentFormValues } from "../../models/tournament";
 import agent from "../Agent";
 import { v4 as uuid } from 'uuid';
 import { format } from "date-fns";
+import { store } from "./store";
+import { Profile } from "../../models/profile";
 
 export default class TournamentStore
 {
@@ -88,51 +90,45 @@ export default class TournamentStore
         this.loadingInitial = state;
     }
 
-    createTournament = async (tournament: Tournament) =>
+    createTournament = async (tournament: TournamentFormValues) =>
     {
-        this.loading = true;
-        tournament.id = uuid();
-
+        const user = store.userStore.user;
+        const participator = new Profile(user!);
         try
         {
             await agent.Tournaments.create(tournament);
+            const newTournament = new Tournament(tournament);
+            newTournament.hostUsername = user!.username;
+            newTournament.participators = [participator];
+            this.setTournament(newTournament);
+
             runInAction(() =>
             {
-                this.tournamentRegistry.set(tournament.id, tournament);
-                this.selectedTournament = tournament;
-                this.editMode = false;
-                this.loading = false;
+                this.selectedTournament = newTournament;
             })
         } catch (error)
         {
-            runInAction(() =>
-            {
-                this.loading = false;
-            })
             console.log(error);
         }
     }
 
-    updateTournament = async (tournament: Tournament) =>
+    updateTournament = async (tournament: TournamentFormValues) =>
     {
-        this.loading = true;
         try
         {
             await agent.Tournaments.update(tournament);
             runInAction(() =>
             {
-                this.tournamentRegistry.set(tournament.id, tournament);
-                this.selectedTournament = tournament;
-                this.editMode = false;
-                this.loading = false;
+                if (tournament.id)
+                {
+                    let updatedTournament = { ...this.getTournament(tournament.id), ...tournament }
+                    this.tournamentRegistry.set(tournament.id, updatedTournament as Tournament);
+                    this.selectedTournament = updatedTournament as Tournament;
+                }
             })
         } catch (error)
         {
             console.log(error);
-            runInAction(() =>
-            {
-                this.loading = false;
-            })
         }
     }
 
@@ -157,6 +153,60 @@ export default class TournamentStore
         }
     }
 
+    updateParticipation = async () =>
+    {
+        const user = store.userStore.user;
+        this.loading = true;
+
+        try
+        {
+            await agent.Tournaments.participate(this.selectedTournament!.id);
+            runInAction(() =>
+            {
+                if (this.selectedTournament?.isGoing)
+                {
+                    this.selectedTournament.participators = this.selectedTournament.participators?.filter(a => a.userName !== user?.username);
+                    this.selectedTournament.isGoing = false;
+                } else
+                {
+                    const participator = new Profile(user!);
+                    this.selectedTournament?.participators?.push(participator);
+                    this.selectedTournament!.isGoing = true;
+                }
+                this.tournamentRegistry.set(this.selectedTournament!.id, this.selectedTournament!)
+            })
+        } catch (error)
+        {
+            console.log(error);
+        }
+        finally
+        {
+            runInAction(() => this.loading = false);
+        }
+    }
+
+    cancelTournamentToggle = async () =>
+    {
+        this.loading = true;
+        try
+        {
+            await agent.Tournaments.participate(this.selectedTournament!.id);
+            runInAction(() =>
+            {
+                this.selectedTournament!.isCancelled = !this.selectedTournament!.isCancelled;
+                this.tournamentRegistry.set(this.selectedTournament!.id, this.selectedTournament!);
+            });
+        } catch (error)
+        {
+            console.log(error);
+        } finally
+        {
+            runInAction(() =>
+                this.loading = false
+            );
+        }
+    }
+
     private getTournament = (id: string) =>
     {
         return this.tournamentRegistry.get(id);
@@ -164,6 +214,15 @@ export default class TournamentStore
 
     private setTournament = (tournament: Tournament) =>
     {
+        const user = store.userStore.user;
+        if (user)
+        {
+            tournament.isGoing = tournament.participators!.some(
+                a => a.userName === user.username
+            )
+            tournament.isHost = tournament.hostUsername === user.username;
+            tournament.host = tournament.participators?.find(x => x.userName === tournament.hostUsername);
+        }
         tournament.date = new Date(tournament.date!);
         this.tournamentRegistry.set(tournament.id, tournament);
     }

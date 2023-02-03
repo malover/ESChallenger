@@ -1,4 +1,5 @@
 using Application.Tournaments;
+
 using AutoMapper;
 using Domain;
 

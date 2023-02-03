@@ -12,7 +12,7 @@ namespace Persistence
         public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
         {
 
-            if (!userManager.Users.Any())
+            if (!userManager.Users.Any() && !context.Tournaments.Any())
             {
                 var users = new List<AppUser>
                 {
@@ -25,13 +25,9 @@ namespace Persistence
                 {
                     await userManager.CreateAsync(user, "Pa$$w0rd");
                 }
-            }
 
-            if (context.Tournaments.Any())
-                return;
-
-            var tournaments = new List<Tournament>
-            {
+                var tournaments = new List<Tournament>
+                {
                 new Tournament{
                     Title = "Starladder season 12",
                     Date = DateTime.UtcNow.AddMonths(-2),
@@ -40,7 +36,15 @@ namespace Persistence
                     City = "Kyiv",
                     Venue = "Cybersports arena",
                     Category = "Dota 2",
-                    PrizePool = 250000M
+                    PrizePool = 250000M,
+                    Participators = new List<TournamentParticipator>
+                        {
+                            new TournamentParticipator
+                            {
+                                AppUser = users[0],
+                                IsHost = true
+                            }
+                        }
                 },
                 new Tournament{
                     Title = "ESL season 5",
@@ -50,7 +54,20 @@ namespace Persistence
                     City = "Rio de Janeiro",
                     Venue = "Major arena",
                     Category = "CSGO 2",
-                    PrizePool = 600000M
+                    PrizePool = 600000M,
+                    Participators = new List<TournamentParticipator>
+                        {
+                            new TournamentParticipator
+                            {
+                                AppUser = users[0],
+                                IsHost = true
+                            },
+                            new TournamentParticipator
+                            {
+                                AppUser = users[1],
+                                IsHost = false
+                            }
+                        }
                 },new Tournament{
                     Title = "Blast winter finals",
                     Date = DateTime.UtcNow.AddMonths(-2),
@@ -59,7 +76,20 @@ namespace Persistence
                     City = "Coppenhagen",
                     Venue = "Capital arena",
                     Category = "CSGO",
-                    PrizePool = 200000M
+                    PrizePool = 200000M,
+                    Participators = new List<TournamentParticipator>
+                        {
+                            new TournamentParticipator
+                            {
+                                AppUser = users[2],
+                                IsHost = true
+                            },
+                            new TournamentParticipator
+                            {
+                                AppUser = users[1],
+                                IsHost = false
+                            },
+                        }
                 },new Tournament{
                     Title = "International 10",
                     Date = DateTime.UtcNow.AddMonths(-2),
@@ -68,7 +98,20 @@ namespace Persistence
                     City = "Boston",
                     Venue = "Grants arena",
                     Category = "Dota 2",
-                    PrizePool = 250000M
+                    PrizePool = 250000M,
+                    Participators = new List<TournamentParticipator>
+                        {
+                            new TournamentParticipator
+                            {
+                                AppUser = users[0],
+                                IsHost = true
+                            },
+                            new TournamentParticipator
+                            {
+                                AppUser = users[2],
+                                IsHost = false
+                            },
+                        }
                 },new Tournament{
                     Title = "Worlds",
                     Date = DateTime.UtcNow.AddMonths(-2),
@@ -77,11 +120,25 @@ namespace Persistence
                     City = "Tokyo",
                     Venue = "Sinjuan arena",
                     Category = "LoL",
-                    PrizePool = 250000M
+                    PrizePool = 250000M,
+                    Participators = new List<TournamentParticipator>
+                    {
+                        new TournamentParticipator
+                        {
+                            AppUser = users[2],
+                            IsHost = true
+                        },
+                        new TournamentParticipator
+                        {
+                            AppUser = users[1],
+                            IsHost = false
+                        },
+                    }
                 }
             };
-            await context.Tournaments.AddRangeAsync(tournaments);
-            await context.SaveChangesAsync();
+                await context.Tournaments.AddRangeAsync(tournaments);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

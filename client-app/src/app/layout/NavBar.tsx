@@ -15,7 +15,7 @@ export default observer(function NavBar()
                     ESChallenger
                 </Menu.Item>
 
-                <Menu.Item as={NavLink} to='/tournaments' name='ESChallenger' />
+                <Menu.Item as={NavLink} to='/tournaments' name='Tournaments' />
                 <Menu.Item as={NavLink} to='/errors' name='Errors' />
 
                 <Menu.Item>

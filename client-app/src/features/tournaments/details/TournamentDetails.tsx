@@ -31,7 +31,7 @@ export default observer(function TournamentDetails()
                 <TournamentDetailedChat />
             </Grid.Column>
             <Grid.Column width={6}>
-                <TournamentDetailedSidebar />
+                <TournamentDetailedSidebar tournament={tournament} />
             </Grid.Column>
         </Grid>
     )
