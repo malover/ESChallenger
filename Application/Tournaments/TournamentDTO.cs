@@ -15,6 +15,6 @@ namespace Application.Tournaments
         public decimal PrizePool { get; set; }
         public string HostUsername { get; set; }
         public bool IsCancelled { get; set; }
-        public ICollection<Profile> Participators { get; set; }
+        public ICollection<ParticipatorDTO> Participators { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Persistence
 
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<TournamentParticipator> TournamentParticipators { get; set; }
+        public DbSet<Photo> Photos{ get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
