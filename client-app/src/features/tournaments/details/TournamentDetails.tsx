@@ -13,12 +13,13 @@ import TournamentDetailedSidebar from "./TournamentDetailedSidebar";
 export default observer(function TournamentDetails()
 {
     const { tournamentStore } = useStore();
-    const { selectedTournament: tournament, loadTournament, loadingInitial } = tournamentStore;
+    const { selectedTournament: tournament, loadTournament, loadingInitial, clearSelectedTournament } = tournamentStore;
     const { id } = useParams();
 
     useEffect(() =>
     {
         if (id) loadTournament(id);
+        return () => clearSelectedTournament();
     }, [id, loadTournament])
 
     if (loadingInitial || !tournament) return <LoadingComponent />;
@@ -27,8 +28,8 @@ export default observer(function TournamentDetails()
         <Grid>
             <Grid.Column width={10}>
                 <TournamentDetailedHeader tournament={tournament} />
-                <TournamentDetailedInfo tournament={tournament}/>
-                <TournamentDetailedChat />
+                <TournamentDetailedInfo tournament={tournament} />
+                <TournamentDetailedChat tournamentId={tournament.id} />
             </Grid.Column>
             <Grid.Column width={6}>
                 <TournamentDetailedSidebar tournament={tournament} />

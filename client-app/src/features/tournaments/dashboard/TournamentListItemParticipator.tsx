@@ -14,20 +14,20 @@ export default observer(function TournamentParticipator({ participators }: Props
 {
     return (
         <List horizontal>
-            {participators.map(participator => (
-                <Popup
-                    hoverable
-                    key={participator.userName}
-                    trigger={<List.Item key={participator.userName}
-                        as={Link} to={`/profiles/${participator.userName}`}>
-                        <Image size="mini" circular src={participator.image || "/assets/user.png"} />
-                    </List.Item>}>
-                    <Popup.Content>
-                        <ProfileCard profile={participator} />
-                    </Popup.Content>
-                </Popup>
-
-            ))}
+            {participators.map(participator =>
+            {
+                return (
+                    <Popup hoverable key={participator.userName} trigger={
+                        <List.Item as={Link} to={`/profiles/${participator.userName}`}>
+                            <Image size="mini" circular src={participator.image || "/assets/user.png"} />
+                        </List.Item>
+                    }>
+                        <Popup.Content>
+                            <ProfileCard profile={participator} />
+                        </Popup.Content>
+                    </Popup>
+                );
+            })}
         </List>
-    )
+    );
 })

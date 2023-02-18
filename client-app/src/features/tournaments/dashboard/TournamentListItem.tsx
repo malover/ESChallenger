@@ -17,12 +17,12 @@ export default function TournamentListItem({ tournament }: Props)
                 {tournament.isCancelled && <Label attached="top" color="red" content="Cancelled" style={{ textAlign: "center" }} />}
                 <Item.Group>
                     <Item>
-                        <Item.Image style={{marginBottom: 5}} size="tiny" circular src='/assets/user.png ' />
+                        <Item.Image style={{ marginBottom: 5 }} size="tiny" circular src={tournament.host?.image || '/assets/user.png'} />
                         <Item.Content>
                             <Item.Header as={Link} to={`/tournaments/${tournament.id}`}>
                                 {tournament.title}
                             </Item.Header>
-                            <Item.Description>Hosted by {tournament.host?.displayName}</Item.Description>
+                            <Item.Description>Hosted by <Link to={`/profiles/${tournament.hostUsername}`}>{tournament.host?.displayName}</Link></Item.Description>
                             {tournament.isHost && (
                                 <Item.Description>
                                     <Label basic color="orange">

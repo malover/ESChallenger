@@ -13,5 +13,6 @@ namespace Domain
         public decimal PrizePool { get; set; }
         public bool IsCancelled { get; set; }
         public ICollection<TournamentParticipator> Participators { get; set; } = new List<TournamentParticipator>();
+        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
     }
 }

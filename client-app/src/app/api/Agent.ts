@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from "react-toastify";
+import { Photo, Profile } from '../models/profile';
 import { Tournament, TournamentFormValues } from "../models/tournament";
 import { User, UserFormValues } from "../models/user";
 import { router } from "../router/Routes";
@@ -85,7 +86,7 @@ const Tournaments = {
     create: (tournament: TournamentFormValues) => request.post<void>('/tournaments', tournament),
     update: (tournament: TournamentFormValues) => request.put<void>(`/tournaments/${tournament.id}`, tournament),
     delete: (id: string) => request.del<void>(`/tournaments/${id}`),
-    participate:(id:string) => request.post<void>(`/tournaments/${id}/participate`, {})
+    participate: (id: string) => request.post<void>(`/tournaments/${id}/participate`, {})
 }
 
 const Account = {
@@ -94,9 +95,25 @@ const Account = {
     register: (user: UserFormValues) => request.post<User>('/account/register', user)
 }
 
+const Profiles = {
+    get: (username: string) => request.get<Profile>(`/profiles/${username}`),
+    uploadPhoto: (file: Blob) =>
+    {
+        let formData = new FormData();
+        formData.append('File', file);
+        return axios.post<Photo>('photos', formData, {
+            headers: { 'Content-type': 'multipart/form-data' }
+        })
+    },
+    setMainPhoto: (id: string) => request.post(`/photos/${id}/setMain`, {}),
+    deletePhoto: (id: string) => request.del(`/photos/${id}`),
+    updateProfile: (profile: Partial<Profile>) => request.put(`/profiles`, profile)
+}
+
 const agent = {
     Tournaments,
-    Account
+    Account,
+    Profiles
 }
 
 export default agent;

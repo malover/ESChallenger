@@ -12,7 +12,8 @@ namespace Persistence
 
         public DbSet<Tournament> Tournaments { get; set; }
         public DbSet<TournamentParticipator> TournamentParticipators { get; set; }
-        public DbSet<Photo> Photos{ get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,6 +30,11 @@ namespace Persistence
             .HasOne(u => u.Tournament)
             .WithMany(a => a.Participators)
             .HasForeignKey(aa => aa.TournamentId);
+
+            builder.Entity<Comment>()
+            .HasOne(t => t.Tournament)
+            .WithMany(c => c.Comments)
+            .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

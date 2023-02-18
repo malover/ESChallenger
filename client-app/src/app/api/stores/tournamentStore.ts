@@ -43,6 +43,7 @@ export default class TournamentStore
         try
         {
             const tournaments = await agent.Tournaments.list();
+            console.log(tournaments[0].participators[0].bio);
             tournaments.forEach(tournament =>
             {
                 this.setTournament(tournament);
@@ -205,6 +206,11 @@ export default class TournamentStore
                 this.loading = false
             );
         }
+    }
+
+    clearSelectedTournament = () =>
+    {
+        this.selectedTournament = undefined;
     }
 
     private getTournament = (id: string) =>
