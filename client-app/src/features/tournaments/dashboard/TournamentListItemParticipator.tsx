@@ -12,6 +12,11 @@ interface Props
 
 export default observer(function TournamentParticipator({ participators }: Props)
 {
+    const styles = {
+        borderColor: 'orange',
+        borderWidth: 3
+    }
+
     return (
         <List horizontal>
             {participators.map(participator =>
@@ -19,7 +24,13 @@ export default observer(function TournamentParticipator({ participators }: Props
                 return (
                     <Popup hoverable key={participator.userName} trigger={
                         <List.Item as={Link} to={`/profiles/${participator.userName}`}>
-                            <Image size="mini" circular src={participator.image || "/assets/user.png"} />
+                            <Image
+                                size="mini"
+                                circular
+                                src={participator.image || "/assets/user.png"}
+                                bordered
+                                style={participator.following ? styles : null}
+                            />
                         </List.Item>
                     }>
                         <Popup.Content>

@@ -42,7 +42,8 @@ export default observer(function ActivityDetailedSidebar({ tournament: { partici
                                 <Item.Header as='h3'>
                                     <Link to={`/profiles/${participator.userName}`}>{participator.displayName}</Link>
                                 </Item.Header>
-                                <Item.Extra style={{ color: 'orange' }}>Following</Item.Extra>
+                                {participator.following &&
+                                    <Item.Extra style={{ color: 'orange' }}>Following</Item.Extra>}
                             </Item.Content>
                         </Item>
                     ))}

@@ -3,6 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Card, CardDescription, Icon, Image } from "semantic-ui-react";
 import { Profile } from "../../app/models/profile";
+import FollowButton from "./FollowButton";
 
 interface Props
 {
@@ -15,7 +16,7 @@ export default observer(function ProfileCard({ profile }: Props)
     {
         if (str === undefined)
         {
-            return 'Bio goes here'; 
+            return 'Bio goes here';
         }
         return str.length > 40 ? str.substring(0, 37) + '...' : str;
     }
@@ -29,8 +30,9 @@ export default observer(function ProfileCard({ profile }: Props)
             </Card.Content>
             <Card.Content extra>
                 <Icon name='user' />
-                20 followers
+                {profile.followersCount} Followers
             </Card.Content>
+            <FollowButton profile={profile} />
         </Card>
     )
 })

@@ -213,6 +213,21 @@ export default class TournamentStore
         this.selectedTournament = undefined;
     }
 
+    updateParticipatorFollowing = (username: string) =>
+    {
+        this.tournamentRegistry.forEach(tournament =>
+        {
+            tournament.participators.forEach(participator =>
+            {
+                if (participator.userName === username)
+                {
+                    participator.following ? participator.followersCount-- : participator.followersCount++;
+                    participator.following = !participator.following;
+                }
+            })
+        })
+    }
+
     private getTournament = (id: string) =>
     {
         return this.tournamentRegistry.get(id);
