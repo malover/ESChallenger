@@ -12,9 +12,13 @@ interface Props
 
 export default observer(function ProfileCard({ profile }: Props)
 {
-    function truncate(str: string | undefined)
+    function truncate(str: string | undefined | null)
     {
         if (str === undefined)
+        {
+            return 'Bio goes here';
+        }
+        if (str === null)
         {
             return 'Bio goes here';
         }

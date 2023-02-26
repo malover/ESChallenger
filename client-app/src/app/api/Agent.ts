@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from "react-toastify";
+import { PaginatedResult } from '../models/paginations';
 import { Photo, Profile } from '../models/profile';
 import { Tournament, TournamentFormValues } from "../models/tournament";
 import { User, UserFormValues } from "../models/user";
@@ -19,6 +20,12 @@ axios.defaults.baseURL = 'http://localhost:5000/api';
 axios.interceptors.response.use(async response =>
 {
     await sleep(1000);
+    const pagination = response.headers['pagination'];
+    if (pagination)
+    {
+        response.data = new PaginatedResult(response.data, JSON.parse(pagination));
+        return response as AxiosResponse<PaginatedResult<any>>
+    }
     return response;
 }, (error: AxiosError) =>
 {
@@ -81,7 +88,7 @@ const request = {
 }
 
 const Tournaments = {
-    list: () => request.get<Tournament[]>('/tournaments'),
+    list: (params: URLSearchParams) => axios.get<PaginatedResult<Tournament[]>>('/tournaments', {params}).then(responseBody),
     details: (id: string) => request.get<Tournament>(`/tournaments/${id}`),
     create: (tournament: TournamentFormValues) => request.post<void>('/tournaments', tournament),
     update: (tournament: TournamentFormValues) => request.put<void>(`/tournaments/${tournament.id}`, tournament),

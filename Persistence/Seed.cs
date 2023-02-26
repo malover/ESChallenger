@@ -30,7 +30,7 @@ namespace Persistence
                 {
                 new Tournament{
                     Title = "Starladder season 12",
-                    Date = DateTime.UtcNow.AddMonths(-2),
+                    Date = DateTime.UtcNow.AddMonths(2),
                     Description = "Dota 2 tournament which takes place in Kyiv Cybersports arena.",
                     Country = "Ukraine",
                     City = "Kyiv",
@@ -48,7 +48,7 @@ namespace Persistence
                 },
                 new Tournament{
                     Title = "ESL season 5",
-                    Date = DateTime.UtcNow.AddMonths(-2),
+                    Date = DateTime.UtcNow.AddMonths(3),
                     Description = "CSGO tournament which takes place in Rio Major arena.",
                     Country = "Brazil",
                     City = "Rio de Janeiro",
@@ -70,7 +70,7 @@ namespace Persistence
                         }
                 },new Tournament{
                     Title = "Blast winter finals",
-                    Date = DateTime.UtcNow.AddMonths(-2),
+                    Date = DateTime.UtcNow.AddMonths(4),
                     Description = "CSGO tournament which takes place in Coppenhagen Capital arena.",
                     Country = "Denmark",
                     City = "Coppenhagen",
@@ -92,7 +92,7 @@ namespace Persistence
                         }
                 },new Tournament{
                     Title = "International 10",
-                    Date = DateTime.UtcNow.AddMonths(-2),
+                    Date = DateTime.UtcNow.AddMonths(5),
                     Description = "Dota 2 tournament which takes place in Boston Grants arena.",
                     Country = "USA",
                     City = "Boston",
@@ -114,7 +114,7 @@ namespace Persistence
                         }
                 },new Tournament{
                     Title = "Worlds",
-                    Date = DateTime.UtcNow.AddMonths(-2),
+                    Date = DateTime.UtcNow.AddMonths(6),
                     Description = "LoL tournament which takes place in Tokyo Sinjuan arena.",
                     Country = "Japan",
                     City = "Tokyo",

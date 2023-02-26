@@ -1,3 +1,4 @@
+using Application.Core;
 using Application.Tournaments;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
@@ -8,10 +9,9 @@ namespace API.Controllers
     public class TournamentsController : BaseApiController
     {
         [HttpGet]
-        public async Task<IActionResult> GetTournaments()
+        public async Task<IActionResult> GetTournaments([FromQuery] TournamentParams param)
         {
-            var response = await Mediator.Send(new List.Query());
-            return HandleResult(response);
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = param }));
         }
 
         [HttpGet("{id}")]
