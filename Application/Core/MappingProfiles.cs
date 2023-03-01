@@ -1,4 +1,5 @@
 using Application.Comments;
+using Application.Profiles;
 using Application.Tournaments;
 
 using AutoMapper;
@@ -6,7 +7,7 @@ using Domain;
 
 namespace Application.Core
 {
-    public class MappingProfiles : Profile
+    public class MappingProfiles : AutoMapper.Profile
     {
         public MappingProfiles()
         {
@@ -35,6 +36,16 @@ namespace Application.Core
             .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.Author.DisplayName))
             .ForMember(d => d.UserName, o => o.MapFrom(s => s.Author.UserName))
             .ForMember(d => d.Image, o => o.MapFrom(s => s.Author.Photos.FirstOrDefault(x => x.IsMain).Url));
+
+            CreateMap<TournamentParticipator, UserTournamentDto>()
+            .ForMember(d => d.Id, o => o.MapFrom(s => s.Tournament.Id))
+            .ForMember(d => d.Date, o => o.MapFrom(s => s.Tournament.Date))
+            .ForMember(d => d.Title, o => o.MapFrom(s => s.Tournament.Title))
+            .ForMember(d => d.Category, o => o.MapFrom(s => s.Tournament.Category))
+            .ForMember(d => d.HostUserName, o => o.MapFrom(s => s.Tournament.Participators
+            .FirstOrDefault(x => x.IsHost).AppUser.UserName));
+
+
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Persistence
                     Country = "Ukraine",
                     City = "Kyiv",
                     Venue = "Cybersports arena",
-                    Category = "Dota 2",
+                    Category = "dota 2",
                     PrizePool = 250000M,
                     Participators = new List<TournamentParticipator>
                         {
@@ -53,7 +53,7 @@ namespace Persistence
                     Country = "Brazil",
                     City = "Rio de Janeiro",
                     Venue = "Major arena",
-                    Category = "CSGO 2",
+                    Category = "CSGO",
                     PrizePool = 600000M,
                     Participators = new List<TournamentParticipator>
                         {
@@ -97,7 +97,7 @@ namespace Persistence
                     Country = "USA",
                     City = "Boston",
                     Venue = "Grants arena",
-                    Category = "Dota 2",
+                    Category = "dota 2",
                     PrizePool = 250000M,
                     Participators = new List<TournamentParticipator>
                         {
@@ -119,7 +119,7 @@ namespace Persistence
                     Country = "Japan",
                     City = "Tokyo",
                     Venue = "Sinjuan arena",
-                    Category = "LoL",
+                    Category = "lol",
                     PrizePool = 250000M,
                     Participators = new List<TournamentParticipator>
                     {

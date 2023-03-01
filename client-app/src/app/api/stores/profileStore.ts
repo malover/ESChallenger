@@ -1,6 +1,6 @@
 import { makeAutoObservable, reaction, runInAction } from "mobx";
 import { boolean } from "yup";
-import { Photo, Profile } from "../../models/profile";
+import { Photo, Profile, UserTournament } from "../../models/profile";
 import agent from "../Agent";
 import { store } from "./store";
 
@@ -13,6 +13,8 @@ export default class ProfileStore
     followings: Profile[] = [];
     loadingFollowings = false;
     activeTab = 0;
+    userTournaments: UserTournament[] = [];
+    loadingTournaments = false;
 
     constructor()
     {
@@ -176,7 +178,7 @@ export default class ProfileStore
                 {
                     following ? this.profile.followersCount++ : this.profile.followersCount--;
                     this.profile.following = !this.profile.following;
-                }               
+                }
                 if (this.profile && this.profile.userName === store.userStore.user?.username)
                 {
                     following ? this.profile.followingCount++ : this.profile.followingCount--;
@@ -214,6 +216,28 @@ export default class ProfileStore
         {
             console.log(error);
             runInAction(() => this.loadingFollowings = false);
+        }
+    }
+
+    loadUserTournaments = async (username: string, predicate?: string) =>
+    {
+        this.loadingTournaments = true;
+
+        try
+        {
+            const tournaments = await agent.Profiles.listTournaments(username, predicate!);
+            runInAction(() =>
+            {
+                this.userTournaments = tournaments;
+                this.loadingTournaments = false;
+            })
+        } catch (error)
+        {
+            console.log(error);
+            runInAction(() =>
+            {
+                this.loadingTournaments = false;
+            })
         }
     }
 }

@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { toast } from "react-toastify";
 import { PaginatedResult } from '../models/paginations';
-import { Photo, Profile } from '../models/profile';
+import { Photo, Profile, UserTournament } from '../models/profile';
 import { Tournament, TournamentFormValues } from "../models/tournament";
 import { User, UserFormValues } from "../models/user";
 import { router } from "../router/Routes";
@@ -15,11 +15,11 @@ const sleep = (delay: number) =>
     })
 }
 
-axios.defaults.baseURL = 'http://localhost:5000/api';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 
 axios.interceptors.response.use(async response =>
 {
-    await sleep(1000);
+    if(process.env.NODE_ENV === 'development') await sleep(1000);
     const pagination = response.headers['pagination'];
     if (pagination)
     {
@@ -88,7 +88,7 @@ const request = {
 }
 
 const Tournaments = {
-    list: (params: URLSearchParams) => axios.get<PaginatedResult<Tournament[]>>('/tournaments', {params}).then(responseBody),
+    list: (params: URLSearchParams) => axios.get<PaginatedResult<Tournament[]>>('/tournaments', { params }).then(responseBody),
     details: (id: string) => request.get<Tournament>(`/tournaments/${id}`),
     create: (tournament: TournamentFormValues) => request.post<void>('/tournaments', tournament),
     update: (tournament: TournamentFormValues) => request.put<void>(`/tournaments/${tournament.id}`, tournament),
@@ -116,7 +116,9 @@ const Profiles = {
     deletePhoto: (id: string) => request.del(`/photos/${id}`),
     updateProfile: (profile: Partial<Profile>) => request.put(`/profiles`, profile),
     updateFollowing: (username: string) => request.post(`/follow/${username}`, {}),
-    listFollowings: (username: string, predicate: string) => request.get<Profile[]>(`/follow/${username}?predicate=${predicate}`)
+    listFollowings: (username: string, predicate: string) => request.get<Profile[]>(`/follow/${username}?predicate=${predicate}`),
+    listTournaments: (username: string, predicate: string) =>
+        request.get<UserTournament[]>(`/profiles/${username}/tournaments?predicate=${predicate}`)
 }
 
 const agent = {

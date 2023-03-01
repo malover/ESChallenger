@@ -20,7 +20,7 @@ export default class CommentStore
         if (store.tournamentStore.selectedTournament)
         {
             this.hubConnection = new HubConnectionBuilder()
-                .withUrl('http://localhost:5000/chat?tournamentId=' + tournamentId, {
+                .withUrl(process.env.REACT_APP_CHAT_URL + '?tournamentId=' + tournamentId, {
                     accessTokenFactory: () => store.userStore.user?.token!
                 })
                 .withAutomaticReconnect()
@@ -34,7 +34,7 @@ export default class CommentStore
                 {
                     comments.forEach(comment =>
                     {
-                        comment.createdAt = new Date(comment.createdAt + 'Z');
+                        comment.createdAt = new Date(comment.createdAt);
                     })
                     this.comments = comments;
                 });

@@ -6,6 +6,7 @@ import { Profile } from '../../app/models/profile';
 import ProfileAbout from './ProfileAbout';
 import ProfileFollowing from './ProfileFollowing';
 import ProfilePhotos from './ProfilePhotos';
+import ProfileTournaments from './ProfileTournaments';
 
 interface Props
 {
@@ -19,7 +20,7 @@ export default observer(function ProfileContent({ profile }: Props)
     const panes = [
         { menuItem: 'About', render: () => <ProfileAbout /> },
         { menuItem: 'Photos', render: () => <ProfilePhotos profile={profile} /> },
-        { menuItem: 'Tournaments', render: () => <Tab.Pane>Tournaments content</Tab.Pane> },
+        { menuItem: 'Tournaments', render: () => <ProfileTournaments /> },
         { menuItem: 'Followers', render: () => <ProfileFollowing /> },
         { menuItem: 'Following', render: () => <ProfileFollowing /> },
     ]

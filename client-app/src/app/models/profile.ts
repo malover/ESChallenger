@@ -28,3 +28,11 @@ export interface Photo
     url: string;
     isMain: boolean;
 }
+
+export interface UserTournament
+{
+    id: string;
+    title: string;
+    category: string;
+    date: Date;
+}
